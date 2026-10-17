@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Deposit Funds — SadaPay Gateway | Veltra</title>
+<meta name="description" content="Fund your Veltra account via SadaPay and submit your payment proof for instant admin verification." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body data-page="deposit">
+
+<div id="app-header"></div>
+
+<section class="section" style="padding-top:36px">
+  <div class="container">
+
+    <div class="section-head" style="margin-bottom:28px">
+      <span class="eyebrow">Deposit Gateway</span>
+      <h2>Fund your account</h2>
+      <p>Send your plan amount to the official Veltra wallet below, then submit the proof form so an admin can
+        verify and activate your plan.</p>
+    </div>
+
+    <div class="alert alert-warn mb-24">
+      <span>!</span>
+      <div>Only send funds to the wallet listed below. Veltra never asks for payments to any other number,
+        and never requests your SadaPay PIN or OTP.</div>
+    </div>
+
+    <div class="grid g-2" style="align-items:start">
+
+      <!-- Gateway -->
+      <div class="grid" style="gap:18px">
+        <div class="card card-glow">
+          <div class="between mb-16">
+            <div class="card-title">Official Deposit Wallet</div>
+            <span class="badge badge-active">Verified</span>
+          </div>
+
+          <div class="grid" style="gap:12px">
+            <div class="copy-value">
+              <span class="tiny muted">Network</span><b id="gwNetwork">SadaPay</b>
+            </div>
+            <div class="copy-value">
+              <span class="tiny muted">Account Title</span>
+              <span class="flex gap-8" style="align-items:center"><b id="gwTitle">—</b>
+                <button class="btn btn-ghost btn-sm" type="button" data-copy="title">Copy</button></span>
+            </div>
+            <div class="copy-value">
+              <span class="tiny muted">Account Number</span>
+              <span class="flex gap-8" style="align-items:center"><b id="gwNumber" class="mono">—</b>
+                <button class="btn btn-ghost btn-sm" type="button" data-copy="number">Copy</button></span>
+            </div>
+            <div class="copy-value">
+              <span class="tiny muted">IBAN</span>
+              <span class="flex gap-8" style="align-items:center"><b id="gwIban" class="mono" style="font-size:.82rem">—</b>
+                <button class="btn btn-ghost btn-sm" type="button" data-copy="iban">Copy</button></span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-block mt-16" type="button" id="copyAllWallet">Copy all wallet details</button>
+        </div>
+
+        <div class="card">
+          <h3>Deposit steps</h3>
+          <div class="timeline mt-16">
+            <div class="timeline-item"><div class="marker"><span class="dot"></span><span class="bar"></span></div>
+              <div class="content"><b class="small">1. Select your plan</b>
+                <div class="tiny muted">Choose the tier you want to activate. The exact amount is shown below.</div></div></div>
+            <div class="timeline-item"><div class="marker"><span class="dot"></span><span class="bar"></span></div>
+              <div class="content"><b class="small">2. Send the exact amount</b>
+                <div class="tiny muted">Transfer to the wallet using your SadaPay or bank app.</div></div></div>
+            <div class="timeline-item"><div class="marker"><span class="dot"></span><span class="bar"></span></div>
+              <div class="content"><b class="small">3. Submit the proof form</b>
+                <div class="tiny muted">Enter your sender number and the Transaction ID (TID) from your receipt.</div></div></div>
+            <div class="timeline-item"><div class="marker"><span class="dot"></span></div>
+              <div class="content"><b class="small">4. Wait for activation</b>
+                <div class="tiny muted">Status stays Pending until admin approval — usually within 30 minutes.</div></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="between mb-16">
+            <div class="card-title">Your deposit requests</div>
+            <a class="small" href="dashboard.html">Dashboard →</a>
+          </div>
+          <div id="depHistory"></div>
+        </div>
+      </div>
+
+      <!-- Proof form -->
+      <div class="card">
+        <h3>Payment proof submission</h3>
+        <p class="small">All fields are required. Your deposit will be reviewed against the wallet statement.</p>
+
+        <form id="depositForm" novalidate class="mt-16">
+          <div class="form-row two">
+            <div class="form-group">
+              <label class="form-label" for="dName">Full name</label>
+              <input class="form-control" id="dName" placeholder="Name as per bank account" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="dUsername">Username</label>
+              <input class="form-control" id="dUsername" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="dEmail">Email address</label>
+            <input class="form-control" id="dEmail" type="email" required />
+          </div>
+
+          <div class="form-row two">
+            <div class="form-group">
+              <label class="form-label" for="dPlan">Investment plan</label>
+              <select class="form-control" id="dPlan"></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="dAmount">Amount to send (PKR)</label>
+              <input class="form-control mono" id="dAmount" readonly />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="dSender">Sender number (the number you paid from)</label>
+            <input class="form-control" id="dSender" inputmode="numeric" placeholder="03001234567" required />
+            <div class="field-hint">Enter the 11-digit mobile number linked to the sending account.</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="dTid">Transaction ID (TID) / Reference number</label>
+            <input class="form-control mono" id="dTid" placeholder="e.g. SP-8842137" required />
+            <div class="field-hint">Found on your SadaPay receipt or transaction history.</div>
+          </div>
+
+          <label class="checkbox mb-16">
+            <input type="checkbox" id="dConfirm" />
+            <span>I confirm I have sent the exact amount shown above to the official Veltra wallet and the details
+              I entered are accurate.</span>
+          </label>
+
+          <button class="btn btn-primary btn-block" type="submit" id="depositSubmit">Submit Deposit Proof</button>
+          <div class="alert alert-info mt-16"><span>ℹ</span><div>Status will show as
+            <b>Pending</b> until an admin approves it. You'll see your plan activate on the dashboard right after
+            approval.</div></div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div id="app-footer"></div>
+
+<script src="assets/js/firebase-db.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/deposit.js"></script>
+</body>
+</html>
